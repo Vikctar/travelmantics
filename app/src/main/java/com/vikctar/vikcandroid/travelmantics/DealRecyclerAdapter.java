@@ -1,5 +1,6 @@
 package com.vikctar.vikcandroid.travelmantics;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,8 +26,9 @@ public class DealRecyclerAdapter extends RecyclerView.Adapter<DealRecyclerAdapte
     private DatabaseReference databaseReference;
     private ChildEventListener childEventListener;
 
+
     public DealRecyclerAdapter() {
-        FirebaseUtil.openFirebaseReference("traveldeals");
+//        FirebaseUtil.openFirebaseReference("traveldeals");
 
         firebaseDatabase = FirebaseUtil.firebaseDatabase;
         databaseReference = FirebaseUtil.databaseReference;
