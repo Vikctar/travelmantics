@@ -81,6 +81,8 @@ public class DealRecyclerAdapter extends RecyclerView.Adapter<DealRecyclerAdapte
     public void onBindViewHolder(@NonNull DealViewHolder holder, int position) {
         TravelDeal deal = deals.get(position);
         holder.tvTitle.setText(deal.getTitle());
+        holder.tvDescription.setText(deal.getDescription());
+        holder.tvPrice.setText(deal.getPrice());
 
     }
 
@@ -91,10 +93,14 @@ public class DealRecyclerAdapter extends RecyclerView.Adapter<DealRecyclerAdapte
 
     class DealViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle;
+        TextView tvDescription;
+        TextView tvPrice;
 
         public DealViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvTitle = itemView.findViewById(R.id.tv_title);
+            tvTitle = itemView.findViewById(R.id.text_title);
+            tvDescription = itemView.findViewById(R.id.text_description);
+            tvPrice = itemView.findViewById(R.id.text_price);
         }
     }
 }
