@@ -2,6 +2,7 @@ package com.vikctar.vikcandroid.travelmantics;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     EditText editTitle;
     EditText editDescription;
     EditText editPrice;
+    private TravelDeal deal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,16 @@ public class MainActivity extends AppCompatActivity {
         editTitle = findViewById(R.id.txt_title);
         editDescription = findViewById(R.id.txt_description);
         editPrice = findViewById(R.id.txt_price);
+
+        Intent intent = getIntent();
+        TravelDeal deal = (TravelDeal) intent.getSerializableExtra("Deal");
+        if (deal == null)
+            deal = new TravelDeal();
+        this.deal = deal;
+
+        editTitle.setText(deal.getTitle());
+        editDescription.setText(deal.getDescription());
+        editPrice.setText(deal.getPrice());
     }
 
     @Override
@@ -47,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Deal Saved", Toast.LENGTH_SHORT).show();
             clean();
             return true;
+        } else if (item.getItemId() == R.id.menu_delete) {
+            deleteDeal();
+            Toast.makeText(this, "Deal Deleted", Toast.LENGTH_SHORT).show();
+            backToList();
+            return true;
         }
         return super.onOptionsItemSelected(item);
 
@@ -61,13 +78,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveDeal() {
-        String title = editTitle.getText().toString();
-        String description = editDescription.getText().toString();
-        String price = editPrice.getText().toString();
+        deal.setTitle(editTitle.getText().toString());
+        deal.setDescription(editDescription.getText().toString());
+        deal.setPrice(editPrice.getText().toString());
 
-        TravelDeal travelDeal = new TravelDeal(title, description, price, "");
-        databaseReference.push().setValue(travelDeal);
+        if (deal.getId() == null) {
+            databaseReference.push().setValue(deal);
+        } else {
+            databaseReference.child(deal.getId()).setValue(deal);
+        }
+    }
 
+    private void deleteDeal() {
+        if (deal == null) {
+            Toast.makeText(this, "Deal not found", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        databaseReference.child(deal.getId()).removeValue();
+    }
 
+    private void backToList() {
+        startActivity(new Intent(this, ListActivity.class));
     }
 }

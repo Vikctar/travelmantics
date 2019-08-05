@@ -1,5 +1,6 @@
 package com.vikctar.vikcandroid.travelmantics;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,6 +84,7 @@ public class DealRecyclerAdapter extends RecyclerView.Adapter<DealRecyclerAdapte
         holder.tvTitle.setText(deal.getTitle());
         holder.tvDescription.setText(deal.getDescription());
         holder.tvPrice.setText(deal.getPrice());
+        holder.currentPosition = position;
 
     }
 
@@ -95,12 +97,23 @@ public class DealRecyclerAdapter extends RecyclerView.Adapter<DealRecyclerAdapte
         TextView tvTitle;
         TextView tvDescription;
         TextView tvPrice;
+        int currentPosition;
 
-        public DealViewHolder(@NonNull View itemView) {
+        public DealViewHolder(@NonNull final View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.text_title);
             tvDescription = itemView.findViewById(R.id.text_description);
             tvPrice = itemView.findViewById(R.id.text_price);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TravelDeal selectedDeal = deals.get(currentPosition);
+                    Intent intent = new Intent(itemView.getContext(), MainActivity.class);
+                    intent.putExtra("Deal", selectedDeal);
+                    itemView.getContext().startActivity(intent);
+                }
+            });
         }
     }
 }
