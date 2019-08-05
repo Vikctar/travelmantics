@@ -3,6 +3,9 @@ package com.vikctar.vikcandroid.travelmantics;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,40 +30,13 @@ public class ListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        FirebaseUtil.openFirebaseReference("traveldeals");
+        RecyclerView recyclerView = findViewById(R.id.rv_deals);
+        final DealRecyclerAdapter dealRecyclerAdapter = new DealRecyclerAdapter();
 
-        firebaseDatabase = FirebaseUtil.firebaseDatabase;
-        databaseReference = FirebaseUtil.databaseReference;
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        childEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                TextView textDeals = findViewById(R.id.tv_deals);
-                TravelDeal travelDeal = dataSnapshot.getValue(TravelDeal.class);
-                textDeals.setText(textDeals.getText() + "\n" + travelDeal.getTitle());
-            }
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-
-        databaseReference.addChildEventListener(childEventListener);
+        recyclerView.setAdapter(dealRecyclerAdapter);
     }
 }
