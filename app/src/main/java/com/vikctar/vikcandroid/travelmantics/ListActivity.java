@@ -1,14 +1,20 @@
 package com.vikctar.vikcandroid.travelmantics;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 
 public class ListActivity extends AppCompatActivity {
@@ -29,6 +35,19 @@ public class ListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.insert_menu) {
             startActivity(new Intent(this, MainActivity.class));
+            return true;
+        } else if (item.getItemId() == R.id.menu_logout) {
+            // [START auth_fui_signout]
+            AuthUI.getInstance()
+                    .signOut(this)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Log.d("Sign Out", "User signed out");
+                            FirebaseUtil.attachAuthListener();
+                        }
+                    });
+            // [END auth_fui_signout]
+            FirebaseUtil.detachAuthListener();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -51,5 +70,9 @@ public class ListActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(dealRecyclerAdapter);
         FirebaseUtil.attachAuthListener();
+    }
+
+    public void showMenu() {
+        invalidateOptionsMenu();
     }
 }

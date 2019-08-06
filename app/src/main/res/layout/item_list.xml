@@ -19,7 +19,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/image_deal"
                 android:layout_width="39dp"
                 android:layout_height="44dp"
                 android:layout_marginTop="8dp"
