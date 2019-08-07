@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -24,6 +26,7 @@ public class DealRecyclerAdapter extends RecyclerView.Adapter<DealRecyclerAdapte
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private ChildEventListener childEventListener;
+    private ImageView imageDeal;
 
 
     public DealRecyclerAdapter() {
@@ -87,6 +90,9 @@ public class DealRecyclerAdapter extends RecyclerView.Adapter<DealRecyclerAdapte
         holder.tvPrice.setText(deal.getPrice());
         holder.currentPosition = position;
 
+        holder.showImage(deal.getImageUrl());
+
+
     }
 
     @Override
@@ -105,6 +111,7 @@ public class DealRecyclerAdapter extends RecyclerView.Adapter<DealRecyclerAdapte
             tvTitle = itemView.findViewById(R.id.text_title);
             tvDescription = itemView.findViewById(R.id.text_description);
             tvPrice = itemView.findViewById(R.id.text_price);
+            imageDeal = itemView.findViewById(R.id.image_deal);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -115,6 +122,16 @@ public class DealRecyclerAdapter extends RecyclerView.Adapter<DealRecyclerAdapte
                     itemView.getContext().startActivity(intent);
                 }
             });
+        }
+
+        private void showImage(String url){
+            if (url != null && !url.isEmpty()) {
+                Picasso.with(imageDeal.getContext())
+                        .load(url)
+                        .resize(160, 160)
+                        .centerCrop()
+                        .into(imageDeal);
+            }
         }
     }
 }

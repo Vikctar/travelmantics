@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 
 public class DealActivity extends AppCompatActivity {
@@ -48,7 +49,7 @@ public class DealActivity extends AppCompatActivity {
         editTitle = findViewById(R.id.txt_title);
         editDescription = findViewById(R.id.txt_description);
         editPrice = findViewById(R.id.txt_price);
-        imageView = findViewById(R.id.image);
+        imageView = findViewById(R.id.img_deal_upload);
 
         Intent intent = getIntent();
         TravelDeal deal = (TravelDeal) intent.getSerializableExtra("Deal");
@@ -59,6 +60,8 @@ public class DealActivity extends AppCompatActivity {
         editTitle.setText(deal.getTitle());
         editDescription.setText(deal.getDescription());
         editPrice.setText(deal.getPrice());
+
+        showImage(deal.getImageUrl());
 
         Button uploadButton = findViewById(R.id.button_image);
         uploadButton.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +126,7 @@ public class DealActivity extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             deal.setImageUrl(uri.toString());
+                                            showImage(uri.toString());
                                         }
                                     }
                             );
@@ -167,5 +171,15 @@ public class DealActivity extends AppCompatActivity {
         editTitle.setEnabled(isEnabled);
         editDescription.setEnabled(isEnabled);
         editPrice.setEnabled(isEnabled);
+    }
+
+    private void showImage(String url) {
+        if (url != null && !url.isEmpty()) {
+            int width = getResources().getDisplayMetrics().widthPixels;
+            Picasso.with(this)
+                    .load(url)
+                    .resize(width, width * 2 / 3)
+                    .into(imageView);
+        }
     }
 }
