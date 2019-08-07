@@ -58,12 +58,12 @@
 
     <ImageView
         android:id="@+id/img_deal_upload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
+        android:layout_width="352dp"
+        android:layout_height="246dp"
+        android:layout_marginStart="@dimen/text_margin_standard"
         android:layout_marginTop="@dimen/text_margin_standard"
         android:layout_marginEnd="@dimen/text_margin_standard"
-        android:layout_marginStart="@dimen/text_margin_standard"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.517"
         app:layout_constraintStart_toStartOf="parent"
