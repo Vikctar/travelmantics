@@ -1,6 +1,5 @@
 package com.vikctar.vikcandroid.travelmantics;
 
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -111,7 +110,7 @@ public class DealRecyclerAdapter extends RecyclerView.Adapter<DealRecyclerAdapte
                 @Override
                 public void onClick(View v) {
                     TravelDeal selectedDeal = deals.get(currentPosition);
-                    Intent intent = new Intent(itemView.getContext(), MainActivity.class);
+                    Intent intent = new Intent(itemView.getContext(), DealActivity.class);
                     intent.putExtra("Deal", selectedDeal);
                     itemView.getContext().startActivity(intent);
                 }

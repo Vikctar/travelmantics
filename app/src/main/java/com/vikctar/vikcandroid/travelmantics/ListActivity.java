@@ -40,7 +40,7 @@ public class ListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.insert_menu) {
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, DealActivity.class));
             return true;
         } else if (item.getItemId() == R.id.menu_logout) {
             // [START auth_fui_signout]

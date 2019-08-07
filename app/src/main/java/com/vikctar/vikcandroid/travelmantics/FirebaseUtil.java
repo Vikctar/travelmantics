@@ -14,6 +14,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +29,8 @@ public class FirebaseUtil {
     public static FirebaseAuth.AuthStateListener authStateListener;
     public static ArrayList<TravelDeal> deals;
     private static ListActivity caller;
+    public static FirebaseStorage firebaseStorage;
+    public static StorageReference storageReference;
 
     public static boolean isAdmin;
 
@@ -55,6 +59,7 @@ public class FirebaseUtil {
 
                 }
             };
+            connectStorage();
 
         }
         deals = new ArrayList<>();
@@ -69,14 +74,12 @@ public class FirebaseUtil {
         ChildEventListener eventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                
+                FirebaseUtil.isAdmin = true;
+                caller.showMenu();
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                FirebaseUtil.isAdmin = true;
-                caller.showMenu();
-
             }
 
             @Override
@@ -120,5 +123,10 @@ public class FirebaseUtil {
 
     public static void detachAuthListener() {
         firebaseAuth.removeAuthStateListener(authStateListener);
+    }
+
+    public static void connectStorage() {
+        firebaseStorage  = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference().child("deals_pictures");
     }
 }

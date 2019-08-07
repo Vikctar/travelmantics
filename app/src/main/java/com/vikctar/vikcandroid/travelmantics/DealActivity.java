@@ -1,24 +1,30 @@
 package com.vikctar.vikcandroid.travelmantics;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.view.Menu;
 import android.view.MenuItem;
 
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 
-public class MainActivity extends AppCompatActivity {
+public class DealActivity extends AppCompatActivity {
 
     private static final int PICTURE_RESULT = 42;
 
@@ -34,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_deal);
 
         firebaseDatabase = FirebaseUtil.firebaseDatabase;
         databaseReference = FirebaseUtil.databaseReference;
@@ -53,6 +59,18 @@ public class MainActivity extends AppCompatActivity {
         editTitle.setText(deal.getTitle());
         editDescription.setText(deal.getDescription());
         editPrice.setText(deal.getPrice());
+
+        Button uploadButton = findViewById(R.id.button_image);
+        uploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/jpeg");
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                startActivityForResult(intent.createChooser(intent, "Pick an Image"),
+                        PICTURE_RESULT);
+            }
+        });
     }
 
     @Override
@@ -85,6 +103,32 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICTURE_RESULT && resultCode == RESULT_OK) {
+            Uri imageUri = data.getData();
+            ImageView uploadImage = findViewById(R.id.img_deal_upload);
+            uploadImage.setImageURI(imageUri);
+            final StorageReference storageReference =
+                    FirebaseUtil.storageReference.child("images/" + imageUri.getLastPathSegment());
+            storageReference.putFile(imageUri).addOnSuccessListener(
+                    new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            storageReference.getDownloadUrl().addOnSuccessListener(
+                                    new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            deal.setImageUrl(uri.toString());
+                                        }
+                                    }
+                            );
+                        }
+                    });
+        }
     }
 
     private void clean() {
