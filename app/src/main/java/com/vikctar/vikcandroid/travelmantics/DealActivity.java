@@ -85,10 +85,13 @@ public class DealActivity extends AppCompatActivity {
         if (FirebaseUtil.isAdmin) {
             menu.findItem(R.id.menu_delete).setVisible(true);
             menu.findItem(R.id.menu_save).setVisible(true);
+            enableEditTexts(true);
+            findViewById(R.id.button_image).setEnabled(true);
         } else {
             menu.findItem(R.id.menu_delete).setVisible(false);
             menu.findItem(R.id.menu_save).setVisible(false);
             enableEditTexts(false);
+            findViewById(R.id.button_image).setEnabled(false);
         }
         return true;
     }
