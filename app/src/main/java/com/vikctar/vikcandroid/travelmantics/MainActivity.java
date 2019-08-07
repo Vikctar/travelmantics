@@ -1,18 +1,26 @@
 package com.vikctar.vikcandroid.travelmantics;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import android.view.Menu;
 import android.view.MenuItem;
+
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
+
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+
 public class MainActivity extends AppCompatActivity {
+
+    private static final int PICTURE_RESULT = 42;
 
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
@@ -20,13 +28,13 @@ public class MainActivity extends AppCompatActivity {
     EditText editTitle;
     EditText editDescription;
     EditText editPrice;
+    ImageView imageView;
     private TravelDeal deal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FirebaseUtil.openFirebaseReference("traveldeals", this);
 
         firebaseDatabase = FirebaseUtil.firebaseDatabase;
         databaseReference = FirebaseUtil.databaseReference;
@@ -34,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         editTitle = findViewById(R.id.txt_title);
         editDescription = findViewById(R.id.txt_description);
         editPrice = findViewById(R.id.txt_price);
+        imageView = findViewById(R.id.image);
 
         Intent intent = getIntent();
         TravelDeal deal = (TravelDeal) intent.getSerializableExtra("Deal");
@@ -49,6 +58,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.save_menu, menu);
+        if (FirebaseUtil.isAdmin) {
+            menu.findItem(R.id.menu_delete).setVisible(true);
+            menu.findItem(R.id.menu_save).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_delete).setVisible(false);
+            menu.findItem(R.id.menu_save).setVisible(false);
+            enableEditTexts(false);
+        }
         return true;
     }
 
@@ -58,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
             saveDeal();
             Toast.makeText(this, "Deal Saved", Toast.LENGTH_SHORT).show();
             clean();
+            backToList();
             return true;
         } else if (item.getItemId() == R.id.menu_delete) {
             deleteDeal();
@@ -99,5 +117,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void backToList() {
         startActivity(new Intent(this, ListActivity.class));
+    }
+
+    private void enableEditTexts(boolean isEnabled) {
+        editTitle.setEnabled(isEnabled);
+        editDescription.setEnabled(isEnabled);
+        editPrice.setEnabled(isEnabled);
     }
 }
