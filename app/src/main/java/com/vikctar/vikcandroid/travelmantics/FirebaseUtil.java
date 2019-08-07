@@ -36,7 +36,8 @@ public class FirebaseUtil {
 
     private static final int RC_SIGN_IN = 123;
 
-    private FirebaseUtil() {}
+    private FirebaseUtil() {
+    }
 
     public static void openFirebaseReference(String reference, final ListActivity callerActivity) {
         if (firebaseUtil == null) {
@@ -111,6 +112,8 @@ public class FirebaseUtil {
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
+                        .setTheme(R.style.LoginTheme)
+                        .setLogo(R.drawable.travel)
                         .build(),
                 RC_SIGN_IN);
     }
@@ -124,7 +127,7 @@ public class FirebaseUtil {
     }
 
     public static void connectStorage() {
-        firebaseStorage  = FirebaseStorage.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference().child("deals_pictures");
     }
 }
